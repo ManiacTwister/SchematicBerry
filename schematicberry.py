@@ -51,6 +51,9 @@ if debug:
     print len(blocks[1])
     print len(blocks[1][1])
 
+## Connect to server and send blocks
+mc = minecraft.Minecraft.create()
+
 for z in range(l):
     for y in range(h):
     	for x in range(w):
