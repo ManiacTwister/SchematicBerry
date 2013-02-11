@@ -1,10 +1,13 @@
 SchematicBerry
 ==============
 
-Import MCEdit schematic throught MineCraft PI python API
+Import MCEdit schematic through MineCraft PI python API
 
 
 ## Test it
 ```bash
 python schematicberry.py -i creeper.schematic
 ```
+
+## Test it
+* Convert block ids to pocket edition and use AIR for non-existent blocks
