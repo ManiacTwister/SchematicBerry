@@ -4,7 +4,7 @@ from numpy import swapaxes, uint8
 import sys, getopt, numpy
 sys.path.append("./")
 
-#from mcpi import minecraft
+from mcpi import minecraft
 import nbt
 
 ## Argument handling
@@ -56,4 +56,4 @@ for z in range(l):
     	for x in range(w):
     		block = blocks[x][y][z]
     		data = datas[x][y][z]
-    		#mc.setBlock(x,y,z,block, data)
+    		mc.setBlock(x,y,z,block, data)
