@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-
 from numpy import swapaxes, uint8
 import sys, getopt, numpy
 sys.path.append("./")
-
 from mcpi import minecraft
 import nbt
+import time
 
 ## Argument handling
 debug = bool(0)
@@ -16,7 +15,7 @@ except getopt.GetoptError:
     sys.exit(2)
 for opt, arg in opts:
     if opt in ("-i", "--ifile"):
-    	ifile = arg
+        ifile = arg
     elif opt in ("-d", "--debug"):
         debug = bool(1)
 
@@ -35,13 +34,20 @@ except IOError:
     print 'Could not open schematic file: ', ifile
     sys.exit(2)
 
+def progress(i):
+    sys.stdout.write("\rPlacing blocks ... %d%% done" % i)
+    sys.stdout.flush()
+
 ## Load schematic
 w = level["Width"].value
 l = level["Length"].value
 h = level["Height"].value
+total = float(w * l * h)
 
 blocks = swapaxes(swapaxes(level["Blocks"].value.astype('uint16').reshape(h, l, w),0,2), 1,2) # yzx -> xzy -> xyz
 datas = swapaxes(swapaxes(level["Data"].value.reshape(h, l, w),0,2), 1,2)
+
+print "Loaded %s " % ifile
 
 if debug:
     print l # z
@@ -54,9 +60,14 @@ if debug:
 ## Connect to server and send blocks
 mc = minecraft.Minecraft.create()
 
+cur = 0.0
 for z in range(l):
     for y in range(h):
-    	for x in range(w):
-    		block = blocks[x][y][z]
-    		data = datas[x][y][z]
-    		mc.setBlock(x,y,z,block, data)
+        for x in range(w):
+            block = blocks[x][y][z]
+            data = datas[x][y][z]
+            mc.setBlock(x,y,z,block, data)
+            cur = cur + 1.0
+            progress(cur / total * 100)
+
+print "\nGoodbye."
