@@ -8,14 +8,27 @@ import time
 
 ## Argument handling
 debug = bool(0)
+xOffset = 0
+yOffset = 0
+zOffset = 0
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"i:d",["ifile=", "debug"])
+    opts, args = getopt.getopt(sys.argv[1:],"i:c:d",["ifile=", "coordinates=", "debug"])
 except getopt.GetoptError:
     print 'schematicberry.py -i <inputfile>'
     sys.exit(2)
 for opt, arg in opts:
     if opt in ("-i", "--ifile"):
         ifile = arg
+    elif opt in ("-c", "--coordinates"):
+        coords = arg.split(",")
+        if len(coords) == 3:
+            xOffset = coords[0]
+            yOffset = coords[1]
+            zOffset = coords[2]
+        else:
+            print "Coordinates have to be x,y,z"
+            sys.exit(2)
     elif opt in ("-d", "--debug"):
         debug = bool(1)
 
@@ -25,7 +38,7 @@ except:
     ifile = None
 
 if ifile is None:
-    print 'schematicberry.py -i <inputfile>'
+    print 'schematicberry.py -i <inputfile> [-c <x,y,z>]'
     sys.exit()
 
 try:
@@ -66,7 +79,7 @@ for z in range(l):
         for x in range(w):
             block = blocks[x][y][z]
             data = datas[x][y][z]
-            mc.setBlock(x,y,z,block, data)
+            mc.setBlock(xOffset + x, yOffset + y, zOffset + z, block, data)
             cur = cur + 1.0
             progress(cur / total * 100)
 
